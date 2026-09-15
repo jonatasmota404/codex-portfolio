@@ -1,26 +1,41 @@
 @import "tailwindcss";
 
+@theme {
+  --color-parchment: #E4DCC8;
+  --color-night: #14161C;
+  --color-ink: #211D16;
+  --color-ink-light: #D9D2BF;
+  --color-verdigris: #5B8770;
+  --color-oxide: #C1571F;
+  --font-serif: var(--font-serif), Georgia, serif;
+  --font-voice: var(--font-voice), Georgia, serif;
+  --font-mono: var(--font-mono), monospace;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --pagina-bg: var(--color-parchment);
+  --pagina-texto: var(--color-ink);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html {
+  background-color: var(--pagina-bg);
+  color: var(--pagina-texto);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html.night {
+  --pagina-bg: var(--color-night);
+  --pagina-texto: var(--color-ink-light);
+}
+
+.codex-draw {
+  stroke-dasharray: 900;
+  stroke-dashoffset: 900;
+}
+.codex-em-vista .codex-draw {
+  animation: codex-dash 2s ease-out forwards;
+}
+@keyframes codex-dash {
+  to {
+    stroke-dashoffset: 0;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
