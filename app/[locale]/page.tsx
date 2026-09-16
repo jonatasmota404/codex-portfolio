@@ -1,23 +1,20 @@
 import Link from "next/link";
-import { CodexInstrument } from "@/components/codex/CodexInstrument";
 import { listarRepositorios, listarEscritos } from "@/lib/github";
+import { SecaoProjetosFiltrada } from "@/components/codex/SecaoProjetosFiltrada";
+import { useTranslations } from "next-intl";
 
 export default async function Home() {
+  const t = useTranslations("home");
   const repos = (await listarRepositorios()).slice(0, 2);
   const posts = (await listarEscritos()).slice(0, 3);
 
   return (
     <div className="py-12 space-y-16">
       <section className="text-center">
-        <p className="font-mono text-xs text-oxide mb-2">backend · frontend · infra</p>
-        <h1 className="font-voice italic text-3xl mb-4 max-w-lg mx-auto">
-          Um engenheiro construindo confiabilidade do código à infraestrutura
-        </h1>
-        <p className="text-sm opacity-70 max-w-md mx-auto mb-8">
-          Fullstack (Node.js/TypeScript, React) com foco em infraestrutura e confiabilidade.
-          Aqui documento projetos e escrevo sobre o que aprendo construindo sistemas de verdade.
-        </p>
-        <CodexInstrument />
+        <p className="font-mono text-xs text-oxide mb-2">{t("tagline")}</p>
+        <h1 className="font-voice italic text-3xl mb-4 max-w-lg mx-auto">{t("titulo")}</h1>
+        <p className="text-sm opacity-70 max-w-md mx-auto mb-8">{t("descricao")}</p>
+        <SecaoProjetosFiltrada repos={repos} />
       </section>
 
       <section>

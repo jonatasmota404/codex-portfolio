@@ -4,30 +4,31 @@ import matter from "gray-matter";
 const GITHUB_USER = "jonatasmota404"; 
 const REPO_ESCRITOS = "escritos";
 
-async function githubFetch(url: string) {
+async function githubFetch(url: string, tags: string[] = []) {
   const resposta = await fetch(url, {
     headers: {
       Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
       Accept: "application/vnd.github+json",
     },
-    next: { revalidate: 3600 }, // revalida no máximo 1x por hora
+    next: { revalidate: 3600, tags },
   });
-
-  if (!resposta.ok) {
-    throw new Error(`GitHub API falhou: ${resposta.status}`);
-  }
+  if (!resposta.ok) throw new Error(`GitHub API falhou: ${resposta.status}`);
   return resposta.json();
 }
 
 export async function listarRepositorios() {
   const repos = await githubFetch(
-    `https://api.github.com/users/${GITHUB_USER}/repos?sort=updated&per_page=100`
+    `https://api.github.com/users/${GITHUB_USER}/repos?sort=updated&per_page=100`,
+    ["repo:lista"]
   );
   return repos.filter((r: any) => r.topics?.includes("portfolio"));
 }
 
 async function listarArquivosMdx(repo: string) {
-  const arquivos = await githubFetch(`https://api.github.com/repos/${GITHUB_USER}/${repo}/contents/`);
+  const arquivos = await githubFetch(
+    `https://api.github.com/repos/${GITHUB_USER}/${repo}/contents/`,
+    [`repo:${repo}`]
+  );
   return arquivos.filter((a: any) => a.name.endsWith(".mdx"));
 }
 
@@ -37,7 +38,7 @@ export async function buscarArquivoRaw(repo: string, path: string): Promise<stri
       Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
       Accept: "application/vnd.github.raw+json",
     },
-    next: { revalidate: 3600 },
+    next: { revalidate: 3600, tags: [`repo:${repo}`] },
   });
   if (!resposta.ok) throw new Error(`Falha ao buscar ${path}: ${resposta.status}`);
   return resposta.text();

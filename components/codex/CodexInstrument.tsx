@@ -25,6 +25,10 @@ const ZONAS: Record<Zona, { titulo: string; cor: string; chips: string[]; caso: 
     },
 };
 
+type CodexInstrumentProps = {
+    onZonaMudar?: (zona: Zona) => void;
+};
+
 function anguloDoEvento(e: MouseEvent | TouchEvent, svg: SVGSVGElement) {
     const rect = svg.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
@@ -42,7 +46,7 @@ function zonaPorAngulo(deg: number): Zona {
     return "infra";
 }
 
-export function CodexInstrument() {
+export function CodexInstrument({ onZonaMudar }: CodexInstrumentProps) {
     const svgRef = useRef<SVGSVGElement>(null);
     const [angulo, setAngulo] = useState(0);
     const [arrastando, setArrastando] = useState(false);
@@ -54,7 +58,9 @@ export function CodexInstrument() {
 
         function mover(e: MouseEvent | TouchEvent) {
             if (!svgRef.current) return;
-            setAngulo(anguloDoEvento(e, svgRef.current));
+            const novoAngulo = anguloDoEvento(e, svgRef.current);
+            setAngulo(novoAngulo);
+            onZonaMudar?.(zonaPorAngulo(novoAngulo));
         }
         function soltar() {
             setArrastando(false);
@@ -71,7 +77,7 @@ export function CodexInstrument() {
             window.removeEventListener("touchmove", mover);
             window.removeEventListener("touchend", soltar);
         };
-    }, [arrastando]);
+    }, [arrastando, onZonaMudar]);
 
     return (
         <div className="max-w-sm mx-auto text-center">
@@ -92,7 +98,7 @@ export function CodexInstrument() {
                 </g>
             </svg>
 
-            <div className="mt-3 min-h-[70px]">
+            <div className="mt-3 min-h-17.5">
                 <p className="font-voice italic text-lg" style={{ color: dados.cor }}>
                     {dados.titulo}
                 </p>

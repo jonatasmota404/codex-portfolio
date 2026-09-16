@@ -10,6 +10,7 @@
   --font-serif: var(--font-serif), Georgia, serif;
   --font-voice: var(--font-voice), Georgia, serif;
   --font-mono: var(--font-mono), monospace;
+  --font-hand: var(--font-hand), cursive;
 }
 
 :root {

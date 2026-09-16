@@ -64,14 +64,14 @@ export default function Template({ children }: { children: React.ReactNode }) {
         }
     }, []);
 
-      if (fase === "pronto") {
-    return (
-      <>
-        <Cabecalho />
-        <main className="max-w-3xl mx-auto px-4">{children}</main>
-      </>
-    );
-  }
+    if (fase === "pronto") {
+        return (
+            <>
+                <Cabecalho />
+                <main className="max-w-3xl mx-auto px-4">{children}</main>
+            </>
+        );
+    }
 
     const mini = fase === "fechado" || fase === "aberto";
 
@@ -80,8 +80,8 @@ export default function Template({ children }: { children: React.ReactNode }) {
             <div
                 className="bg-parchment shadow-2xl relative overflow-hidden"
                 style={{
-                    width: mini ? `${MINI.width}px` : "100vw",
-                    height: mini ? `${MINI.height}px` : "100vh",
+                    width: mini ? `min(${MINI.width}px, 82vw)` : "100vw",
+                    height: mini ? `min(${MINI.height}px, 82vw / 0.738)` : "100vh",
                     backgroundColor: "var(--pagina-bg)",
                     color: "var(--pagina-texto)",
                     transition: "width 0.8s cubic-bezier(0.65,0,0.35,1), height 0.8s cubic-bezier(0.65,0,0.35,1), background-color 0.3s, color 0.3s",
@@ -105,8 +105,8 @@ export default function Template({ children }: { children: React.ReactNode }) {
                 <motion.div
                     className="absolute z-10"
                     style={{
-                        width: MINI.width,
-                        height: MINI.height,
+                        width: `min(${MINI.width}px, 82vw)`,
+                        height: `min(${MINI.height}px, 82vw / 0.738)`,
                         transformOrigin: "left center",
                         transformStyle: "preserve-3d",
                     }}
